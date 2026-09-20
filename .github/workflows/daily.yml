@@ -1,29 +1,29 @@
-name: Daily Contribution
+name: Daily Commit
 
 on:
   schedule:
-    - cron: "30 12 * * *"   # 6:00 PM IST
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update:
+  commit:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Update activity
+      - name: Update log file
         run: |
-          echo "Daily update: $(date -u)" >> activity.txt
+          echo "Contribution on $(date -u)" >> contributions.log
 
-      - name: Commit changes
+      - name: Commit and push
         run: |
           git config user.name "prince1205-code"
           git config user.email "princekumar16u@gmail.com"
-          git add activity.txt
-          git commit -m "chore: daily update" || exit 0
+          git add contributions.log
+          git commit -m "Daily auto-contribution: $(date -u +%F)"
           git push
